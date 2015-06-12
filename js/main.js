@@ -1,16 +1,16 @@
 define([
            'dojo/_base/declare',
            'dojo/query',
-   	   'dijit/form/Button',
-	   'JBrowse/Util',
+
+	   	   'dijit/form/Button',
            'JBrowse/Plugin'
        ],
        function(
            declare,
            query,
-	   dijitButton,
-           Util, 
-	   JBrowsePlugin
+	   	   
+		   dijitButton,
+           JBrowsePlugin
        ) {
 return declare( JBrowsePlugin,
 {
@@ -19,122 +19,42 @@ return declare( JBrowsePlugin,
 		var thisBrowser = this.browser;
         var makeFull = this.makeFullscreenButton();
 		
-		if (!document.mozFullScreenEnabled 
-			&& !document.webkitFullScreenEnabled 
-			&& !document.webkitFullscreenEnabled
-			&& !document.msFullScreenEnabled
-			&& !document.msFullscreenEnabled
-			&& !document.fullScreenEnabled
-			&& !document.fullscreenEnabled
-		   ){
-				console.log("fullscreen is not supported by your browser.");
-				return;
-			}
 
 		thisBrowser.afterMilestone('initView', function() {
 	
 			var myMenu = thisBrowser.menuBar;
 			
-        		console.log( "fullscreen plugin starting" );
+        	console.log( "fullpage plugin starting" );
 
 			myMenu.appendChild(makeFull);
-			// make certain outerTrackCoutainer actually has a color (white)
-			var ot = document.getElementsByClassName("outerTrackContainer");
-			ot[0].style.backgroundColor = 'rgba('+[255,255,255,1].join(',')+')';
-			var it = document.getElementsByClassName("innerTrackContainer");
-			it[0].style.backgroundColor = 'rgba('+[255,255,255,0].join(',')+')';
+		
 		})
         
-		console.log( "fullscreen plugin added" );
+		console.log( "fullpage plugin added" );
 	},
 
     makeFullscreenButton: function () {
 	
 	var goFull = function(){
-                var doc = document;
-		var ele = doc.body;
-                var head = doc.getElementById("header");
-                var foot = doc.getElementById("footer");
-                var tracksel = doc.getElementsByClassName("faceted_tracksel_on_off tab");
-                tracksel = tracksel[0];
-
+		var ele = document.getElementById("GenomeBrowser");
+		var doc = document;
 		// Recent api changes mean that browser might be looking for Fullscreen
 		// or FullScreen 
 
 
 	
-		if(		!doc.fullscreen
-			&& 	!doc.fullScreen	
-			&& 	!doc.msFullscreenElement 
-			&& 	!doc.msFullScreenElement
-			&& 	!doc.mozFullScreen
-			&& 	!doc.webkitFullscreenElement
-			&& 	!doc.webkitFullScreenElement){
+			console.log("entering fullpage");
 
-			console.log("entering fullscreen");
+                 var url = '/tools/genome/jbrowse/full.html';
+                 var get = document.location.search;
+                 var newWindow = window.open(url+get, "WormBase JBrowse");
 
-                        head.style.display = 'none';
-                        foot.style.display = 'none';
-                        ele.style.height = '100%';
-                        ele.style.width  = '100%';
-                        tracksel.style.top = '6em';
-		
-                        setTimeout(function() {}, 5000);
-	
-			if (ele.requestFullScreen){
-				ele.requestFullScreen();
-			} else if (ele.requestFullscreen){
-				ele.requestFullscreen();
-			} else if (ele.msRequestFullScreen){
-				ele.msRequestFullScreen();
-			} else if (ele.msRequestFullscreen){
-				ele.msRequestFullscreen();
-			} else if (ele.mozRequestFullScreen){
-				ele.mozRequestFullScreen();
-			} else if (ele.webkitRequestFullScreen){
-				ele.webkitRequestFullScreen();
-			} else if (ele.webkitRequestFullscreen){
-				ele.webkitRequestfullscreen();
-			}
-		// If already fullscreen toggle
-		 } else {
-		 	
-		 	console.log("closing fullscreen");
- 
-                        ele.style.height = '650px';
-                        ele.style.width  = '98%';
-                        head.style.display = 'block';
-                        foot.style.display = 'block';
-                        tracksel.style.top = '11em';
-
-		 	
-		 	if (doc.exitFullScreen){
-		 		doc.exitFullScreen();
-		 	} else if (doc.exitFullscreen){
-		 		doc.exitFullscreen();
-		 	} else if (doc.msExitFullScreen){
-		 		doc.msExitFullScreen();
-		 	} else if (doc.msExitFullscreen){
-		 		doc.msExitFullscreen();
-		 	} else if (doc.mozCancelFullScreen){
-		 		doc.mozCancelFullScreen();
-		 	} else if (doc.webkitExitFullScreen){
-		 		doc.webkitExitFullScreen();
-		 	} else if (doc.webkitExitFullscreen){
-		 		doc.webkitExitFullscreen();
-			}
-		 }
-		
-		// redraw location in case broweser doesn't update properly
-		var view = /.*&loc=([^:%]*)[:%3A]*([0-9]*)\.\.([0-9]*).*/.exec(window.location.href);
-		var loc = view[1]+":"+view[2]+".."+view[3];
-		window.JBrowse.showRegionAfterSearch(loc);
 	};
 
 	var selectFullButton = new dijitButton({
 		className :"fullscreen-button",
-		innerHTML:"Fullscreen",
-		title: "Enable Fullscreen",
+		innerHTML:"Full page",
+		title: "Creates a new window for just JBrowse",
 		onClick : function(){
 	
 			goFull();
