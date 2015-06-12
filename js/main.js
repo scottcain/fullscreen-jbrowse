@@ -51,8 +51,13 @@ return declare( JBrowsePlugin,
     makeFullscreenButton: function () {
 	
 	var goFull = function(){
-		var ele = document.body;
-		var doc = document;
+                var doc = document;
+		var ele = doc.body;
+                var head = doc.getElementById("header");
+                var foot = doc.getElementById("footer");
+                var tracksel = doc.getElementsByClassName("faceted_tracksel_on_off tab");
+                tracksel = tracksel[0];
+
 		// Recent api changes mean that browser might be looking for Fullscreen
 		// or FullScreen 
 
@@ -67,7 +72,15 @@ return declare( JBrowsePlugin,
 			&& 	!doc.webkitFullScreenElement){
 
 			console.log("entering fullscreen");
-			
+
+                        head.style.display = 'none';
+                        foot.style.display = 'none';
+                        ele.style.height = '100%';
+                        ele.style.width  = '100%';
+                        tracksel.style.top = '6em';
+		
+                        setTimeout(function() {}, 5000);
+	
 			if (ele.requestFullScreen){
 				ele.requestFullScreen();
 			} else if (ele.requestFullscreen){
@@ -87,6 +100,13 @@ return declare( JBrowsePlugin,
 		 } else {
 		 	
 		 	console.log("closing fullscreen");
+ 
+                        ele.style.height = '650px';
+                        ele.style.width  = '98%';
+                        head.style.display = 'block';
+                        foot.style.display = 'block';
+                        tracksel.style.top = '11em';
+
 		 	
 		 	if (doc.exitFullScreen){
 		 		doc.exitFullScreen();
